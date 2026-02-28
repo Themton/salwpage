@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex">
+<title>สั่งซื้อสินค้า</title>
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+try{const d=JSON.parse(localStorage.getItem('sp_v3')||'{}');if(d.pixel){fbq('init',d.pixel);fbq('track','PageView')}}catch(e){}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#FE2C55;--accent2:#E91E4D;--accent-bg:#FFF0F3;
+  --orange:#FF6F20;--yellow:#FFD700;--yellow-bg:#FFF9E6;
+  --bg:#FFFFFF;--bg2:#F8F8FA;--bg3:#F0F0F5;
+  --text:#161823;--text2:#505050;--text3:#8A8B91;
+  --border:#E8E8E8;
+  --green:#00C853;--green2:#00A844;--green-bg:#E8F5E9;
+  --radius:14px;--radius-sm:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg2);color:var(--text);overflow-x:hidden}
+h1,h2,h3,.price,.badge,.cta{font-family:'Kanit',sans-serif}
+img{max-width:100%;display:block}
+.page{max-width:480px;margin:0 auto;background:var(--bg);min-height:100vh;box-shadow:0 0 30px rgba(0,0,0,.04);padding-bottom:80px}
+
+/* URGENCY */
+.urgency{background:var(--accent);color:#fff;padding:9px 16px;text-align:center;font-family:'Kanit',sans-serif;font-size:13px;font-weight:500;position:relative;overflow:hidden}
+.urgency::after{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:uShine 3s ease infinite}
+@keyframes uShine{0%{left:-100%}50%,100%{left:100%}}
+
+/* LIVE */
+.live-bar{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border)}
+.live-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;animation:blink 1s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.live-label{font-family:'Kanit',sans-serif;font-size:12px;color:var(--accent);font-weight:600}
+.live-count{margin-left:auto;font-size:11px;color:var(--text3)}
+
+/* SLIDER */
+.slider{position:relative;background:var(--bg3);aspect-ratio:1;overflow:hidden}
+.slider-track{display:flex;transition:transform .35s ease;height:100%}
+.slider-track .sl{min-width:100%;height:100%}
+.slider-track .sl img{width:100%;height:100%;object-fit:cover}
+.slider-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text3);gap:6px;font-size:13px;background:linear-gradient(135deg,#f5f5f5,#eee)}
+.slider-ph span{font-size:48px;opacity:.3}
+.slider-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+.slider-dots .d{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45);transition:.2s;cursor:pointer}
+.slider-dots .d.on{background:#fff;width:18px;border-radius:3px}
+.slider-nav{position:absolute;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.2);border:none;color:#fff;font-size:15px;cursor:pointer;backdrop-filter:blur(4px);display:none}
+.slider-nav.prev{left:6px}
+.slider-nav.next{right:6px}
+.slider.multi .slider-nav{display:flex;align-items:center;justify-content:center}
+.img-num{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.45);color:#fff;padding:2px 9px;border-radius:20px;font-size:10px;font-family:'Kanit',sans-serif;backdrop-filter:blur(4px)}
+.promo-label{position:absolute;top:10px;left:0;background:var(--accent);color:#fff;padding:4px 14px 4px 10px;font-family:'Kanit',sans-serif;font-size:11px;font-weight:600;border-radius:0 16px 16px 0}
+
+/* PRODUCT */
+.prod{padding:14px 16px}
+.price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.price-now{font-family:'Kanit',sans-serif;font-size:30px;font-weight:800;color:var(--accent)}
+.price-old{font-size:15px;color:var(--text3);text-decoration:line-through;font-family:'Kanit',sans-serif}
+.price-off{background:var(--accent);color:#fff;padding:2px 7px;border-radius:4px;font-family:'Kanit',sans-serif;font-size:11px;font-weight:700;align-self:center}
+.prod-title{font-size:16px;font-weight:700;line-height:1.5;margin-bottom:6px;font-family:'Kanit',sans-serif}
+.prod-desc{font-size:13px;color:var(--text2);line-height:1.7}
+
+/* TRUST */
+.trust{display:flex;gap:5px;flex-wrap:wrap;padding:0 16px 12px}
+.trust-b{display:flex;align-items:center;gap:3px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:4px 9px;font-size:10px;color:var(--text2);font-family:'Kanit',sans-serif}
+
+/* SOLD */
+.sold{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--accent-bg);margin:0 16px 10px;border-radius:var(--radius-sm)}
+.sold-txt{font-family:'Kanit',sans-serif;font-size:12px;color:var(--accent);font-weight:600}
+.sold-bar{flex:1;height:5px;background:rgba(254,44,85,.12);border-radius:3px;overflow:hidden}
+.sold-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--orange));border-radius:3px;animation:sfill 2s ease infinite}
+@keyframes sfill{0%,100%{opacity:1}50%{opacity:.65}}
+
+/* PROMO CARD */
+.promo-card{margin:10px 16px 12px;border:2px solid var(--accent);border-radius:var(--radius);overflow:hidden;position:relative}
+.promo-header{background:var(--accent);padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.promo-header h3{color:#fff;font-size:14px;font-weight:700}
+.promo-timer{display:flex;gap:4px}
+.promo-timer .pt{background:rgba(0,0,0,.2);color:#fff;padding:2px 6px;border-radius:4px;font-family:'Kanit',sans-serif;font-size:13px;font-weight:700;min-width:28px;text-align:center}
+.promo-body{padding:12px 14px}
+.promo-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)}
+.promo-item:last-child{border:none}
+.promo-icon{font-size:18px;flex-shrink:0}
+.promo-bold{font-weight:600;color:var(--text);font-family:'Kanit',sans-serif}
+
+/* DIVIDER */
+.div8{height:8px;background:var(--bg2)}
+
+/* BLOCKS */
+.blk{padding:14px 16px}
+.blk-h{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px;font-family:'Kanit',sans-serif}
+.blk-text{font-size:13px;color:var(--text2);line-height:1.8;white-space:pre-wrap}
+.blk-img{border-radius:var(--radius-sm);overflow:hidden;cursor:zoom-in}
+.blk-img img{width:100%}
+.feat-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.feat-item:last-child{border:none}
+.feat-chk{width:20px;height:20px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.feat-txt{font-size:13px;color:var(--text2)}
+
+/* REVIEWS */
+.rev{background:var(--bg2);border-radius:var(--radius-sm);padding:12px;margin-bottom:6px}
+.rev-top{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.rev-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-family:'Kanit',sans-serif;font-weight:600}
+.rev-name{font-size:12px;font-weight:600;font-family:'Kanit',sans-serif}
+.rev-date{font-size:10px;color:var(--text3)}
+.rev-veri{display:inline-flex;align-items:center;gap:2px;background:var(--green-bg);color:var(--green2);padding:1px 6px;border-radius:8px;font-size:9px;font-family:'Kanit',sans-serif;font-weight:500;margin-left:4px}
+.rev-stars{color:var(--yellow);font-size:11px;letter-spacing:1px;margin-bottom:3px}
+.rev-body{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* COUNTDOWN */
+.cd-box{margin:12px 16px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:var(--radius);padding:14px;text-align:center}
+.cd-lbl{font-family:'Kanit',sans-serif;font-size:12px;color:rgba(255,255,255,.6);margin-bottom:6px}
+.cd-row{display:flex;gap:6px;justify-content:center}
+.cd-n{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:6px 12px;min-width:50px}
+.cd-num{font-family:'Kanit',sans-serif;font-size:24px;font-weight:800;color:#fff}
+.cd-unit{font-size:9px;color:rgba(255,255,255,.4)}
+
+/* ORDER FORM */
+.order{padding:14px 16px 20px}
+.order-box{border:2px solid var(--accent);border-radius:16px;padding:20px;position:relative;overflow:hidden;background:var(--bg)}
+.order-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--orange),var(--accent));background-size:200%;animation:oShine 3s ease infinite}
+@keyframes oShine{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.order-h{text-align:center;margin-bottom:16px}
+.order-h h2{font-size:19px;font-weight:800}
+.order-h p{font-size:11px;color:var(--text3);margin-top:3px}
+.f{margin-bottom:12px}
+.f label{display:block;font-family:'Kanit',sans-serif;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:4px}
+.f .req{color:var(--accent)}
+.f input,.f select,.f textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Noto Sans Thai',sans-serif;font-size:15px;color:var(--text);outline:none;transition:.2s;background:var(--bg)}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(254,44,85,.06)}
+.f textarea{resize:vertical;min-height:64px}
+.f select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M8 12L2 5h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-color:var(--bg)}
+.qty-row{display:flex;align-items:center;gap:12px}
+.qty-btn{width:38px;height:38px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:18px;cursor:pointer;font-family:'Kanit',sans-serif;display:flex;align-items:center;justify-content:center}
+.qty-num{font-size:20px;font-weight:700;font-family:'Kanit',sans-serif;min-width:30px;text-align:center}
+.total-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;margin:10px 0;border-top:1.5px solid var(--border);border-bottom:1.5px solid var(--border)}
+.total-lbl{font-family:'Kanit',sans-serif;font-weight:500;color:var(--text2)}
+.total-val{font-family:'Kanit',sans-serif;font-size:24px;font-weight:800;color:var(--accent)}
+.submit{width:100%;padding:15px;background:var(--accent);border:none;border-radius:var(--radius);color:#fff;font-family:'Kanit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:8px}
+.submit:active{transform:scale(.98)}
+.submit .sh{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);animation:bShine 2.5s ease infinite}
+@keyframes bShine{0%{transform:translateX(-100%)}60%,100%{transform:translateX(100%)}}
+.submit:disabled{opacity:.6;cursor:not-allowed}
+.secure{text-align:center;margin-top:8px;font-size:10px;color:var(--text3);display:flex;align-items:center;justify-content:center;gap:3px}
+
+/* STICKY */
+.sticky{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-top:1px solid var(--border);padding:10px 16px;z-index:100;display:flex;align-items:center;gap:10px;max-width:480px;margin:0 auto}
+.sticky-info{flex:1}
+.sticky-price{font-family:'Kanit',sans-serif;font-size:18px;font-weight:800;color:var(--accent)}
+.sticky-stock{font-size:10px;color:var(--text3)}
+.sticky-btn{padding:11px 24px;background:var(--accent);border:none;border-radius:var(--radius);color:#fff;font-family:'Kanit',sans-serif;font-weight:700;font-size:14px;cursor:pointer;animation:sPulse 2s ease infinite;white-space:nowrap}
+@keyframes sPulse{0%,100%{box-shadow:0 0 0 0 rgba(254,44,85,.35)}50%{box-shadow:0 0 0 8px rgba(254,44,85,0)}}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2000;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:28px 20px 36px;max-width:480px;width:100%;text-align:center;animation:mUp .3s ease}
+@keyframes mUp{0%{transform:translateY(100%)}100%{transform:translateY(0)}}
+.modal .ic{font-size:52px;margin-bottom:10px}
+.modal h2{font-family:'Kanit',sans-serif;font-size:20px;color:var(--green);margin-bottom:6px}
+.modal p{color:var(--text2);line-height:1.7;font-size:13px;margin-bottom:16px}
+.modal button{padding:12px 0;width:100%;background:var(--accent);border:none;border-radius:var(--radius);color:#fff;font-family:'Kanit',sans-serif;font-size:15px;font-weight:700;cursor:pointer}
+
+.img-overlay{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:3000;display:none;align-items:center;justify-content:center;padding:12px;cursor:zoom-out}
+.img-overlay.show{display:flex}
+.img-overlay img{max-width:100%;max-height:92vh;border-radius:8px}
+
+.footer{text-align:center;padding:16px;color:var(--text3);font-size:10px}
+
+@media(max-width:480px){.page{box-shadow:none}}
+</style>
+</head>
+<body>
+
+<div class="page" id="app"></div>
+<div class="sticky"><div class="sticky-info"><div class="sticky-price" id="skP"></div><div class="sticky-stock">⚡ เหลือไม่กี่ชิ้น</div></div><button class="sticky-btn" onclick="scrollTo('#orderSec')">🛒 สั่งซื้อเลย</button></div>
+<div class="modal-bg" id="modal"><div class="modal"><div class="ic">🎉</div><h2>สั่งซื้อสำเร็จ!</h2><p id="modalMsg">ขอบคุณค่ะ ทีมงานจะติดต่อกลับเร็วที่สุด<br>รอรับสินค้าภายใน 1-3 วัน</p><button onclick="document.getElementById('modal').classList.remove('show')">ตกลง</button></div></div>
+<div class="img-overlay" id="imgOv" onclick="this.classList.remove('show')"><img id="imgOvSrc"></div>
+
+<script>
+let D={},qty=1,si=0,cdT=3*3600;
+function esc(s){return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function scrollTo(s){document.querySelector(s)?.scrollIntoView({behavior:'smooth'})}
+function openImg(s){document.getElementById('imgOvSrc').src=s;document.getElementById('imgOv').classList.add('show')}
+
+function load(){try{D=JSON.parse(localStorage.getItem('sp_v3')||'{}')}catch(e){D={}}
+if(!D.images)D.images=[];if(!D.blocks)D.blocks=[];if(!D.promos)D.promos=[];if(!D.orders)D.orders=[]}
+
+function render(){
+  const app=document.getElementById('app');
+  let h='';
+
+  // Urgency
+  h+=`<div class="urgency">${D.marquee||'🔥 โปรโมชั่นพิเศษ! สินค้ามีจำนวนจำกัด'}</div>`;
+  // Live
+  h+=`<div class="live-bar"><span class="live-dot"></span><span class="live-label">LIVE</span><span class="live-count">👁 <span id="vc">${300+Math.floor(Math.random()*100)}</span> กำลังดู</span></div>`;
+
+  // Slider
+  const imgs=D.images||[];
+  h+=`<div class="slider${imgs.length>1?' multi':''}" id="slWrap">`;
+  h+=`<div class="slider-track" id="slTrack">`;
+  if(imgs.length>0) imgs.forEach(s=>h+=`<div class="sl"><img src="${s}" onclick="openImg(this.src)"></div>`);
+  else h+=`<div class="sl"><div class="slider-ph"><span>📷</span>ตั้งค่ารูปที่ Admin</div></div>`;
+  h+=`</div><div class="slider-dots" id="slDots">`;
+  if(imgs.length>1) imgs.forEach((_,i)=>h+=`<div class="d${i===0?' on':''}" onclick="goSl(${i})"></div>`);
+  h+=`</div>`;
+  if(imgs.length>1){h+=`<button class="slider-nav prev" onclick="goSl(si-1)">‹</button><button class="slider-nav next" onclick="goSl(si+1)">›</button>`}
+  if(imgs.length>0) h+=`<div class="img-num" id="slNum">1/${imgs.length}</div>`;
+  h+=`<div class="promo-label" id="promoLbl">${D.promoLabel||'ลดราคาพิเศษ'}</div>`;
+  h+=`</div>`;
+
+  // Product info
+  const oP=parseInt(D.oldprice)||1990,nP=parseInt(D.newprice)||990;
+  const disc=Math.round((1-nP/oP)*100);
+  h+=`<div class="prod"><div class="price-row"><span class="price-now">฿${nP.toLocaleString()}</span><span class="price-old">฿${oP.toLocaleString()}</span><span class="price-off">-${disc}%</span></div>`;
+  h+=`<h1 class="prod-title">${esc(D.title)||'สินค้าสุดพิเศษ'}</h1>`;
+  h+=`<p class="prod-desc">${esc(D.subtitle)||''}</p></div>`;
+
+  // Trust
+  h+=`<div class="trust"><div class="trust-b">🚚 ส่งฟรี</div><div class="trust-b">✅ ของแท้ 100%</div><div class="trust-b">🔄 เปลี่ยนคืนได้</div><div class="trust-b">💵 เก็บปลายทาง</div></div>`;
+
+  // Sold
+  h+=`<div class="sold"><span style="font-size:16px">🔥</span><span class="sold-txt">ขายแล้ว ${(1200+Math.floor(Math.random()*300)).toLocaleString()} ชิ้น</span><div class="sold-bar"><div class="sold-fill" style="width:${70+Math.floor(Math.random()*15)}%"></div></div></div>`;
+
+  // Promotions
+  const promos=D.promos||[];
+  if(promos.length>0){
+    promos.forEach(p=>{
+      h+=`<div class="promo-card"><div class="promo-header"><h3>${p.icon||'🎁'} ${esc(p.title)}</h3>`;
+      if(p.hasTimer) h+=`<div class="promo-timer"><span class="pt pth">00</span><span style="color:#fff;font-weight:700">:</span><span class="pt ptm">00</span><span style="color:#fff;font-weight:700">:</span><span class="pt pts">00</span></div>`;
+      h+=`</div><div class="promo-body">`;
+      (p.items||[]).forEach(it=>h+=`<div class="promo-item"><span class="promo-icon">${it.icon||'🎁'}</span><span>${esc(it.text)}</span></div>`);
+      h+=`</div></div>`;
+    });
+  }
+
+  h+=`<div class="div8"></div>`;
+
+  // Dynamic blocks
+  (D.blocks||[]).forEach(b=>{
+    if(b.type==='text') h+=`<div class="blk"><div class="blk-h">${b.title}</div><div class="blk-text">${esc(b.body)}</div></div><div class="div8"></div>`;
+    else if(b.type==='image'&&b.imageData) h+=`<div class="blk"><div class="blk-h">${b.title}</div><div class="blk-img"><img src="${b.imageData}" onclick="openImg(this.src)"></div></div><div class="div8"></div>`;
+    else if(b.type==='features') h+=`<div class="blk"><div class="blk-h">${b.title}</div>${(b.items||[]).map(i=>`<div class="feat-item"><span class="feat-chk">✓</span><span class="feat-txt">${esc(i)}</span></div>`).join('')}</div><div class="div8"></div>`;
+  });
+
+  // Reviews
+  const revs=(D.reviews||'').split('|').filter(r=>r.includes('~'));
+  if(revs.length>0){
+    const colors=['#FE2C55','#FF6F20','#5B5FC7','#00C853','#FF9100','#E91E63'];
+    const agos=['2 วัน','5 วัน','1 สัปดาห์','3 วัน','วันนี้','เมื่อวาน'];
+    h+=`<div class="blk"><div class="blk-h">💬 รีวิวจากลูกค้า</div>`;
+    revs.forEach((r,i)=>{const[n,t]=r.split('~');const ini=(n||'').trim()[0]||'?';
+      h+=`<div class="rev"><div class="rev-top"><div class="rev-av" style="background:${colors[i%6]}">${ini}</div><div><div class="rev-name">${esc((n||'').trim())}<span class="rev-veri">✓ ซื้อจริง</span></div><div class="rev-date">${agos[i%6]}ที่แล้ว</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-body">${esc((t||'').trim())}</div></div>`;
+    });
+    h+=`</div><div class="div8"></div>`;
+  }
+
+  // Countdown
+  h+=`<div class="cd-box"><div class="cd-lbl">⏰ โปรโมชั่นจะหมดใน</div><div class="cd-row"><div class="cd-n"><div class="cd-num" id="cdH">00</div><div class="cd-unit">ชม.</div></div><div class="cd-n"><div class="cd-num" id="cdM">00</div><div class="cd-unit">นาที</div></div><div class="cd-n"><div class="cd-num" id="cdS">00</div><div class="cd-unit">วินาที</div></div></div></div>`;
+
+  // Order form
+  h+=`<div class="order" id="orderSec"><div class="order-box"><div class="order-h"><h2>🛒 สั่งซื้อเลย</h2><p>กรอกข้อมูลเพื่อสั่งซื้อ • จัดส่งใน 1-3 วัน</p></div>`;
+  h+=`<div class="f"><label>ชื่อ-นามสกุล <span class="req">*</span></label><input id="fn" placeholder="กรอกชื่อ-นามสกุล"></div>`;
+  h+=`<div class="f"><label>เบอร์โทร <span class="req">*</span></label><input id="fp" type="tel" placeholder="0XX-XXX-XXXX"></div>`;
+  h+=`<div class="f"><label>ที่อยู่จัดส่ง <span class="req">*</span></label><textarea id="fa" placeholder="บ้านเลขที่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์"></textarea></div>`;
+  h+=`<div class="f"><label>จำนวน</label><div class="qty-row"><button class="qty-btn" onclick="cQty(-1)">−</button><span class="qty-num" id="qN">1</span><button class="qty-btn" onclick="cQty(1)">+</button></div></div>`;
+  h+=`<div class="f"><label>วิธีชำระเงิน</label><select id="fPay"><option value="cod">💵 เก็บเงินปลายทาง (COD)</option><option value="transfer">🏦 โอนเงิน</option><option value="promptpay">📱 พร้อมเพย์</option></select></div>`;
+  h+=`<div class="total-row"><span class="total-lbl">ยอดรวม</span><span class="total-val" id="tVal">฿${nP.toLocaleString()}</span></div>`;
+  h+=`<button class="submit" id="subBtn" onclick="submitOrder()"><span class="sh"></span>🔥 ยืนยันสั่งซื้อเลย</button>`;
+  h+=`<div class="secure">🔒 ข้อมูลปลอดภัย ไม่เปิดเผยต่อบุคคลที่สาม</div>`;
+  h+=`</div></div>`;
+
+  h+=`<div class="footer">© 2026 All rights reserved.</div>`;
+  app.innerHTML=h;
+
+  document.getElementById('skP').textContent='฿'+nP.toLocaleString();
+  document.title=D.title||'สั่งซื้อสินค้า';
+  if(D.countdown) cdT=parseInt(D.countdown)*3600;
+
+  // Touch swipe
+  const sw=document.getElementById('slWrap');
+  let tx=0;
+  sw?.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+  sw?.addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>40){d<0?goSl(si+1):goSl(si-1)}},{passive:true});
+}
+
+/* Slider */
+function goSl(i){const imgs=D.images||[];if(!imgs.length)return;si=(i+imgs.length)%imgs.length;
+  const t=document.getElementById('slTrack');if(t)t.style.transform=`translateX(-${si*100}%)`;
+  document.querySelectorAll('.slider-dots .d').forEach((d,j)=>d.classList.toggle('on',j===si));
+  const n=document.getElementById('slNum');if(n)n.textContent=`${si+1}/${imgs.length}`}
+
+/* Qty */
+function cQty(d){qty=Math.max(1,qty+d);const e=document.getElementById('qN');if(e)e.textContent=qty;uTotal()}
+function uTotal(){const p=parseInt(D.newprice)||990;const e=document.getElementById('tVal');if(e)e.textContent='฿'+(qty*p).toLocaleString()}
+
+/* Countdown */
+setInterval(()=>{if(cdT<=0)return;cdT--;
+  const h=document.getElementById('cdH'),m=document.getElementById('cdM'),s=document.getElementById('cdS');
+  if(h)h.textContent=String(Math.floor(cdT/3600)).padStart(2,'0');
+  if(m)m.textContent=String(Math.floor((cdT%3600)/60)).padStart(2,'0');
+  if(s)s.textContent=String(cdT%60).padStart(2,'0');
+  // Promo timers
+  document.querySelectorAll('.pth').forEach(e=>e.textContent=String(Math.floor(cdT/3600)).padStart(2,'0'));
+  document.querySelectorAll('.ptm').forEach(e=>e.textContent=String(Math.floor((cdT%3600)/60)).padStart(2,'0'));
+  document.querySelectorAll('.pts').forEach(e=>e.textContent=String(cdT%60).padStart(2,'0'));
+},1000);
+
+/* Fake viewers */
+setInterval(()=>{const e=document.getElementById('vc');if(e){let v=parseInt(e.textContent)||300;e.textContent=Math.max(200,v+Math.floor(Math.random()*7)-3)}},4000);
+
+/* Auto slide */
+setInterval(()=>{if((D.images||[]).length>1)goSl(si+1)},4500);
+
+/* Submit */
+async function submitOrder(){
+  const nm=document.getElementById('fn')?.value.trim();
+  const ph=document.getElementById('fp')?.value.trim();
+  const ad=document.getElementById('fa')?.value.trim();
+  const py=document.getElementById('fPay')?.value;
+  if(!nm||!ph||!ad){alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');return}
+
+  const btn=document.getElementById('subBtn');
+  btn.disabled=true;btn.textContent='⏳ กำลังส่ง...';
+
+  const pr=parseInt(D.newprice)||990;
+  const promoNames=(D.promos||[]).map(p=>p.title).join(', ')||'-';
+  const order={id:Math.random().toString(36).substr(2,9),name:nm,phone:ph,address:ad,payment:py,quantity:qty,total:qty*pr,product:D.title||'สินค้า',promo:promoNames,date:new Date().toLocaleString('th-TH')};
+
+  // Save to localStorage
+  try{const d=JSON.parse(localStorage.getItem('sp_v3')||'{}');if(!d.orders)d.orders=[];d.orders.push(order);localStorage.setItem('sp_v3',JSON.stringify(d))}catch(e){}
+
+  // Send to Google Sheets
+  if(D.sheetUrl){
+    try{await fetch(D.sheetUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(order)})}catch(e){console.log('Sheet error:',e)}
+  }
+
+  // Pixel
+  if(typeof fbq!=='undefined'&&D.pixel){fbq('track','Purchase',{value:order.total,currency:'THB',content_name:order.product,num_items:qty});fbq('track','Lead')}
+
+  document.getElementById('modal').classList.add('show');
+  document.getElementById('fn').value='';document.getElementById('fp').value='';document.getElementById('fa').value='';
+  qty=1;const qe=document.getElementById('qN');if(qe)qe.textContent='1';uTotal();
+  btn.disabled=false;btn.innerHTML='<span class="sh"></span>🔥 ยืนยันสั่งซื้อเลย';
+}
+
+/* Init */
+load();render();
+if(typeof fbq!=='undefined'&&D.pixel){fbq('track','ViewContent',{content_name:D.title||'',value:parseInt(D.newprice)||0,currency:'THB'})}
+</script>
+</body>
+</html>
