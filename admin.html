@@ -127,6 +127,53 @@ h1,h2,h3,h4,.label,.tab,.btn-text{font-family:'Kanit',sans-serif}img{max-width:1
 </head>
 <body>
 
+<!-- ══════ LOGIN SCREEN ══════ -->
+<div id="loginScreen" style="position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px">
+  <div style="max-width:360px;width:100%;text-align:center">
+    <div style="font-size:56px;margin-bottom:12px">🔐</div>
+    <h2 style="font-family:'Kanit',sans-serif;font-size:22px;margin-bottom:6px;color:var(--t)">Admin Panel</h2>
+    <p style="color:var(--t3);font-size:13px;margin-bottom:24px">กรอกรหัสผ่านเพื่อเข้าสู่ระบบหลังบ้าน</p>
+    <input type="password" id="loginPw" placeholder="กรอกรหัสผ่าน" onkeydown="if(event.key==='Enter')doLogin()"
+      style="width:100%;padding:14px 16px;background:var(--bg2);border:1.5px solid var(--bd);border-radius:12px;color:var(--t);font-family:'Noto Sans Thai',sans-serif;font-size:16px;outline:none;text-align:center;margin-bottom:12px;transition:.2s">
+    <button onclick="doLogin()"
+      style="width:100%;padding:14px;background:var(--a);border:none;border-radius:12px;color:#fff;font-family:'Kanit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:10px">
+      เข้าสู่ระบบ
+    </button>
+    <div id="loginError" style="color:var(--red);font-family:'Kanit',sans-serif;font-size:13px;display:none">❌ รหัสผ่านไม่ถูกต้อง</div>
+    <div style="margin-top:20px;padding:14px;background:var(--bg2);border:1px solid var(--bd);border-radius:10px;text-align:left">
+      <div style="font-family:'Kanit',sans-serif;font-size:12px;color:var(--g);margin-bottom:6px">📌 วิธีตั้งรหัสผ่าน</div>
+      <div style="font-size:11px;color:var(--t3);line-height:1.7">
+        เปิดไฟล์ <code style="background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--t2)">admin.html</code> ด้วย Notepad<br>
+        ค้นหาคำว่า <code style="background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--a)">ADMIN_PASSWORD</code><br>
+        เปลี่ยนเป็นรหัสผ่านที่ต้องการ<br><br>
+        ⚡ รหัสเริ่มต้น: <code style="background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--g)">admin1234</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════ ตั้งรหัสผ่านตรงนี้ ══════
+const ADMIN_PASSWORD = "admin1234";
+// ══════════════════════════════════
+
+function doLogin(){
+  const pw = document.getElementById('loginPw').value;
+  if(pw === ADMIN_PASSWORD){
+    document.getElementById('loginScreen').style.display = 'none';
+    sessionStorage.setItem('sp_admin_auth','1');
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginPw').style.borderColor = 'var(--red)';
+    setTimeout(()=>{document.getElementById('loginPw').style.borderColor='var(--bd)';document.getElementById('loginError').style.display='none'},2000);
+  }
+}
+// Auto-login if already authenticated this session
+if(sessionStorage.getItem('sp_admin_auth')==='1'){
+  document.addEventListener('DOMContentLoaded',()=>{document.getElementById('loginScreen').style.display='none'});
+}
+</script>
+
 <div class="toast" id="toast">✅ บันทึกแล้ว!</div>
 
 <div class="app">
